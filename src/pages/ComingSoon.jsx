@@ -1,6 +1,48 @@
-import heroVideo from "../../assets/4bb01613dfdb423b5939213ebefd3dde_1776061613.mp4";
+import { useEffect, useRef } from "react";
+import heroVideo from "../../assets/Untitled design.mp4";
 
 export default function ComingSoon() {
+  const mainVideoRef = useRef(null);
+
+  useEffect(() => {
+    const videoEl = mainVideoRef.current;
+    if (!videoEl) return;
+
+    const tryEnableAudio = () => {
+      videoEl.muted = false;
+      const playResult = videoEl.play();
+      if (!playResult || typeof playResult.then !== "function") return true;
+      playResult.then(cleanup).catch(() => {
+        videoEl.muted = true;
+      });
+      return false;
+    };
+
+    const ensurePlaying = () => {
+      const playResult = videoEl.play();
+      if (playResult && typeof playResult.catch === "function") {
+        playResult.catch(() => {});
+      }
+    };
+
+    const onFirstInteraction = () => {
+      tryEnableAudio();
+    };
+
+    const cleanup = () => {
+      window.removeEventListener("pointerdown", onFirstInteraction);
+      window.removeEventListener("keydown", onFirstInteraction);
+    };
+
+    if (!tryEnableAudio()) {
+      ensurePlaying();
+      window.addEventListener("pointerdown", onFirstInteraction, { once: true });
+      window.addEventListener("keydown", onFirstInteraction, { once: true });
+    }
+
+    return cleanup;
+  }, []);
+
   return (
     <main className="relative bg-black">
       <section className="relative min-h-[100svh] w-full overflow-hidden">
@@ -18,6 +60,7 @@ export default function ComingSoon() {
         </video>
 
         <video
+          ref={mainVideoRef}
           className="absolute inset-0 h-full w-full object-cover [object-position:50%_50%] transform-gpu"
           autoPlay
           loop
@@ -46,31 +89,27 @@ export default function ComingSoon() {
               <div className="font-cinematic text-3xl font-semibold tracking-[0.12em] text-[#C4002F] drop-shadow-[0_18px_40px_rgba(0,0,0,0.85)] sm:text-4xl">
                 Black Cat
               </div>
-              <div className="mt-5 text-xl text-white/85">
-                Casting Going On - For Casting Call Naren Bansal -{" "}
-                <a
-                  href="tel:+917986168002"
-                  className="font-medium text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
-                >
-                  +91 79861 68002
-                </a>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
       <section className="relative mx-auto w-full max-w-7xl px-6 pb-20 pt-10 sm:pb-28 sm:pt-14">
-        <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-10 shadow-glow backdrop-blur sm:p-14">
-          <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/30">
-            <div className="mx-auto max-w-4xl px-6 py-12 text-center sm:px-10 sm:py-14 lg:px-14">
-              <div className="font-cinematic text-balance text-3xl font-semibold uppercase leading-tight tracking-[0.18em] text-white sm:text-5xl sm:tracking-[0.22em] lg:text-6xl">
-                Website Coming Soon
-              </div>
-              <div className="mt-4 text-pretty text-sm leading-relaxed text-white/70 sm:text-base">
-                Stay tuned for the official launch announcement.
-              </div>
-            </div>
+        <div className="mx-auto max-w-4xl py-12 text-center sm:py-14 lg:py-16">
+          <div className="font-cinematic text-balance text-3xl font-semibold uppercase leading-tight tracking-[0.18em] text-white sm:text-5xl sm:tracking-[0.22em] lg:text-6xl">
+            Website Coming Soon
+          </div>
+          <div className="mt-4 text-pretty text-sm leading-relaxed text-white/70 sm:text-base">
+            Stay tuned for the official launch announcement.
+          </div>
+          <div className="mt-6 text-pretty text-base leading-relaxed text-white/85 sm:text-lg">
+            Casting Going On - For Casting Call Naren Bansal -{" "}
+            <a
+              href="tel:+917986168002"
+              className="font-medium text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
+            >
+              +91 79861 68002
+            </a>
           </div>
         </div>
 
