@@ -2,43 +2,42 @@ import { useEffect, useRef } from "react";
 import heroVideo from "../../assets/Untitled design.mp4";
 
 export default function ComingSoon() {
+  const backdropVideoRef = useRef(null);
   const mainVideoRef = useRef(null);
 
   useEffect(() => {
-    const videoEl = mainVideoRef.current;
-    if (!videoEl) return;
+    const mainVideoEl = mainVideoRef.current;
+    const backdropVideoEl = backdropVideoRef.current;
+    if (!mainVideoEl && !backdropVideoEl) return;
 
-    const tryEnableAudio = () => {
-      videoEl.muted = false;
-      const playResult = videoEl.play();
-      if (!playResult || typeof playResult.then !== "function") return true;
-      playResult.then(cleanup).catch(() => {
-        videoEl.muted = true;
-      });
-      return false;
-    };
-
-    const ensurePlaying = () => {
+    const startMuted = (videoEl) => {
+      if (!videoEl) return;
+      videoEl.muted = true;
       const playResult = videoEl.play();
       if (playResult && typeof playResult.catch === "function") {
         playResult.catch(() => {});
       }
     };
 
-    const onFirstInteraction = () => {
-      tryEnableAudio();
+    const unmuteAll = () => {
+      if (backdropVideoEl) backdropVideoEl.muted = false;
+      if (mainVideoEl) mainVideoEl.muted = false;
+      if (backdropVideoEl) backdropVideoEl.play().catch(() => {});
+      if (mainVideoEl) mainVideoEl.play().catch(() => {});
     };
 
     const cleanup = () => {
-      window.removeEventListener("pointerdown", onFirstInteraction);
-      window.removeEventListener("keydown", onFirstInteraction);
+      window.removeEventListener("pointerdown", unmuteAll);
+      window.removeEventListener("touchstart", unmuteAll);
+      window.removeEventListener("keydown", unmuteAll);
     };
 
-    if (!tryEnableAudio()) {
-      ensurePlaying();
-      window.addEventListener("pointerdown", onFirstInteraction, { once: true });
-      window.addEventListener("keydown", onFirstInteraction, { once: true });
-    }
+    startMuted(backdropVideoEl);
+    startMuted(mainVideoEl);
+
+    window.addEventListener("pointerdown", unmuteAll, { once: true });
+    window.addEventListener("touchstart", unmuteAll, { once: true, passive: true });
+    window.addEventListener("keydown", unmuteAll, { once: true });
 
     return cleanup;
   }, []);
@@ -47,6 +46,7 @@ export default function ComingSoon() {
     <main className="relative bg-black">
       <section className="relative min-h-[100svh] w-full overflow-hidden">
         <video
+          ref={backdropVideoRef}
           className="absolute inset-0 h-full w-full object-cover blur-2xl opacity-60"
           autoPlay
           loop
