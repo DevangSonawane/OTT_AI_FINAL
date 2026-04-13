@@ -1,9 +1,9 @@
-import heroVideo from "../../assets/3aaca2299011f408d5b9068db621daf1_1776004827.mp4";
+import heroVideo from "../../assets/4bb01613dfdb423b5939213ebefd3dde_1776061613.mp4";
 
 export default function ComingSoon() {
   return (
     <main className="relative bg-black">
-      <section className="relative min-h-screen w-full overflow-hidden">
+      <section className="relative min-h-[100svh] w-full overflow-hidden">
         <video
           className="absolute inset-0 h-full w-full object-cover blur-2xl opacity-60"
           autoPlay
@@ -40,7 +40,7 @@ export default function ComingSoon() {
           className="absolute inset-0 bg-[radial-gradient(1100px_circle_at_50%_40%,rgba(255,255,255,0.06),rgba(0,0,0,0)_55%)]"
         />
 
-        <div className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-end px-6 pb-10 pt-12 sm:pb-12 sm:pt-14">
+        <div className="relative mx-auto flex min-h-[100svh] w-full max-w-7xl flex-col justify-end px-6 pb-10 pt-12 sm:pb-12 sm:pt-14">
           <div className="flex justify-center sm:justify-end">
             <div className="w-full max-w-4xl rounded-[34px] border border-white/10 bg-black/35 p-10 text-center shadow-glow backdrop-blur sm:w-auto sm:text-right sm:p-12 [animation:cc-fadeup_900ms_cubic-bezier(.2,.8,.2,1)_both]">
               <div className="font-cinematic text-3xl font-semibold tracking-[0.12em] text-[#C4002F] drop-shadow-[0_18px_40px_rgba(0,0,0,0.85)] sm:text-4xl">
